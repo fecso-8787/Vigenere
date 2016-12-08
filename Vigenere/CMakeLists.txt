@@ -29,6 +29,6 @@ source_group("Resource"        FILES ${RESOURCES})
 # copy resource dat executable
   add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
     COMMAND "${CMAKE_COMMAND}" -E copy_directory
-    "${CMAKE_SOURCE_DIR}/Resource"
+    "${CMAKE_SOURCE_DIR}/${TARGET_NAME}/Resource"
     $<TARGET_FILE_DIR:${TARGET_NAME}>/Resource
   )
