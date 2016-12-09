@@ -62,9 +62,9 @@ int Encoder::getColumnNumberByChar(const char& input) const
 int Encoder::getRowNumberByChar(const char& input) const
 {
 	int result = 0;
-	while (m_table[0][result] != '\0')
+	while (m_table[result][0] != '\0')
 	{
-		if (m_table[0][result] == input)
+		if (m_table[result][0] == input)
 			break;
 		result++;
 	}
