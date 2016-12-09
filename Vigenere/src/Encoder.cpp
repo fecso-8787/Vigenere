@@ -14,6 +14,10 @@ Encoder::~Encoder()
 
 void Encoder::setKey(String key)
 {
+	if(key.getLenght()==0)
+	{
+		puts("Bad keystring\n");
+	}
 	m_key = key.toUpper();
 }
 
