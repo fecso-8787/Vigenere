@@ -19,31 +19,32 @@ void Encoder::setKey(String key)
 
 String Encoder::getEncodedString(const String& toEncode)
 {
-	unsigned short keyLength = toEncode.getLenght();
+	unsigned short keyLength = toEncode.getLenght()+1;
 	if (keyLength < m_key.getLenght())
 	{
 		keyLength++;
 	}
 	char* keyString = new char[keyLength];
-	for(int i=0;i<keyLength-1;i++)
+	for(int i=0;i<keyLength;i++)
 	{
-		keyString[i] = m_key[i%(m_key.getLenght()-1)];
+		keyString[i] = m_key[i%(m_key.getLenght())];
 	}
 	keyString[keyLength - 1] = '\0';
 	puts(keyString);
 
-	char* encodedString = new char[toEncode.getLenght()];
+	char* encodedString = new char[toEncode.getLenght()+1];
 
-	for(unsigned int i=0;i<toEncode.getLenght()-1;i++)
+	for(unsigned int i=0;i<toEncode.getLenght();i++)
 	{
 		int rowNo = getRowNumberByChar(toEncode.c_str()[i]);
 		int columnNo = getColumnNumberByChar(keyString[i]);
 		encodedString[i] = m_table[rowNo][columnNo];
 	}
 
-	encodedString[toEncode.getLenght() - 1] = '\0';
+	encodedString[toEncode.getLenght()] = '\0';
 	String result = encodedString;
 	delete[] encodedString;
+	delete[] keyString;
 	return result;
 }
 
@@ -93,6 +94,7 @@ void Encoder::Init()
 	while (fgets(line, MAX_LINE_LEN, file))
 	{
 		m_table[lineNum] = line;
+		m_table[lineNum].removeAll('\n');
 		lineNum++;
 	}
 	fclose(file);

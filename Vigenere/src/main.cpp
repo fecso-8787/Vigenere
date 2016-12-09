@@ -26,17 +26,31 @@ int main()
 
 	auto toEncodeString = String(line).toUpper();
 	toEncodeString.RemoveAccents();
-	toEncodeString = toEncodeString.getAcceptableString();
-	puts(toEncodeString.c_str());
+	auto acceptableString = toEncodeString.getAcceptableString();
+	puts(acceptableString.c_str());
 	
 	Encoder enc = Encoder("Resource\\vtabla.dat");
 	enc.Init();
 	gets_s(line, 5);
 	enc.setKey(line);
-	String result = enc.getEncodedString(toEncodeString);
+	String result = enc.getEncodedString(acceptableString);
 	puts(result.c_str());
 	writeOutputFile("kodolt.dat", result);
-	getchar();
+	//getchar();
+	/*while (true)
+	{
+		String toEncodeString = "Ez a próba szöveg, amit kódolunk!";
+		toEncodeString = toEncodeString.toUpper();
+		toEncodeString.RemoveAccents();
+		String acceptableString = toEncodeString.getAcceptableString();
 
+		Encoder enc = Encoder("Resource\\vtabla.dat");
+		enc.Init();
+		enc.setKey("auto");
+		
+		String result = enc.getEncodedString(acceptableString);
+		puts(result.c_str());
+		writeOutputFile("kodolt.dat", result);
+	}*/
 	return 0;
 }

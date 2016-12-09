@@ -2,60 +2,59 @@
 
 String::String()
 {
-	m_charArray =new char[1];
-	m_charArray = "";
+	m_charArray = nullptr;
 	m_length = 0;
+}
+
+String::String(const String& input)
+{
+	if (input.c_str())
+	{
+		m_length = input.getLenght()+1;
+		m_charArray = new char[m_length];
+		strcpy_s(m_charArray, (m_length) * sizeof(char), input.c_str());
+	}
+	else
+	{
+		m_charArray = nullptr;
+		m_length = 0;
+	}
 }
 
 String::String(const char * input)
 {
 	if (input)
 	{
-		m_length = 0;
-		while(input[m_length] && (input[m_length]!='\0' && input[m_length] != '\n'))
-		{
-			m_length++;
-		}
-		m_length++;
-		m_charArray = new char[m_length+1];
-		bool noEnding = input[m_length] != '\0' && input[m_length] != '\n';
-		for(unsigned int i=0;i<m_length+1;i++)
-		{
-			if (i==m_length && noEnding)
-			{
-				m_charArray[i] = '\0';
-			}
-			else
-			{
-				m_charArray[i] = input[i];
-			}
-			if(m_charArray[i]=='\n')
-			{
-				m_charArray[i] = '\0';
-			}
-		}
+		m_length=strlen(input)+1;
+		m_charArray = new char[m_length];
+		strcpy_s(m_charArray, (m_length)*sizeof(char), input);
 	}
 	else
 	{
-		m_charArray = "";
+		m_charArray = nullptr;
 		m_length = 0;
 	}
 }
 
 String::~String()
 {
-
+	if (m_charArray)
+	{
+		delete[] m_charArray;
+		m_charArray = 0;
+	}
 }
 
 const unsigned int String::getLenght() const
 {
-	return m_length;
+	if(m_charArray)
+	return strlen(m_charArray);
+	return -1;
 }
 
 String String::toUpper() const
 {
-	String result;
-	char* newArray = new char[m_length];
+	char newArray[255];
 	for(unsigned int i=0;i<m_length;i++)
 	{
 		if((m_charArray[i]>='a' && m_charArray[i] <= 'z')||(m_charArray[i] >= 'á' && m_charArray[i] <= 'ü'))
@@ -67,9 +66,7 @@ String String::toUpper() const
 			newArray[i] = m_charArray[i];
 		}
 	}
-	result = String(newArray);
-	delete[] newArray;
-	return result;
+	return String(newArray);
 }
 
 void String::RemoveAccents()
@@ -112,7 +109,7 @@ String String::getAcceptableString()const
 			numCharsToRemove++;
 		}
 	}
-	char* newString = new char[m_length - numCharsToRemove];
+	char newString[255];
 	short index = 0;
 	for (unsigned int i = 0; i < m_length; i++)
 	{
@@ -122,13 +119,50 @@ String String::getAcceptableString()const
 			index++;
 		}
 	}
-	String result;
-	result = String(newString);
-	delete[] newString;
-	return result;
+
+	return String(newString);
 }
 
 char& String::operator[](int x)
 {
 	return m_charArray[x];
+}
+
+String& String::operator=(const String& str)
+{
+	if (this != &str)
+	{
+		m_length = str.getLenght()+1;
+		if (m_length > 0)
+		{
+			delete[] m_charArray;
+			m_charArray = new char[this->m_length];
+			strcpy_s(m_charArray, (m_length) * sizeof(char), str.c_str());
+		}
+	}
+
+	return *this;
+}
+
+void String::removeAll(const char c)
+{
+	char temp[255];
+	int counter = 0;
+	for(int i=0;i<strlen(m_charArray);i++)
+	{
+		if(m_charArray[i]!=c)
+		{
+			temp[counter] = m_charArray[i];
+			counter++;
+		}
+	}
+	if (temp[counter] != '\0')
+		temp[counter] = '\0';
+	if (m_charArray)
+	{
+		delete[] m_charArray;
+	}
+	m_charArray=new char[counter+1];
+	strcpy_s(m_charArray, (counter + 1) * sizeof(char), temp);
+	m_length = strlen(m_charArray)+1;
 }
